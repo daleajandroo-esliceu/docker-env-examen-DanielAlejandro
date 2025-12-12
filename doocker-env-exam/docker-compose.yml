@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+  web_examen_daniel:
+    build: .
+    container_name: web_examen_daniel
+    volumes:
+      - ../examen-php:/var/www/html
+    ports:
+      - "8088:80"
+    depends_on:
+      - db_examen_daniel
+
+  db_examen_daniel:
+    image: mariadb:10.11
+    container_name: db_examen_daniel
+    restart: always
+    environment:
+      MYSQL_DATABASE: examen_php
+      MYSQL_USER: examen
+      MYSQL_PASSWORD: examen123
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./db-examen:/var/lib/mysql
+    ports:
+      - "3307:3306"
+
+  phpmyadmin_examen_daniel:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin_examen_daniel
+    environment:
+      PMA_HOST: db_examen_daniel
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "8081:80"
+    depends_on:
+      - db_examen_daniel
